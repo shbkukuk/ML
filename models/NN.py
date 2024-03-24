@@ -5,9 +5,9 @@ class NearestNeighbour:
     def __init__(self, k: int, distance_method: str, train, test):
         self.k = k
         if distance_method == 'euclidean':
-            self.distance = self._euclidean()
+            self.distance = self._euclidean
         elif distance_method == 'manhattan':
-            self.distance = self._manhattan()
+            self.distance = self._manhattan
         else:
             raise NotImplementedError
         self.train = train
@@ -23,10 +23,10 @@ class NearestNeighbour:
     def _manhattan(self):
         return None
 
-    def _get_neighbors(self):
+    def _get_neighbors(self,test_row):
         distances = list()
         for train_row in self.train:
-            dist = self.distance(train_row, self.test)
+            dist = self.distance(train_row, test_row)
             distances.append((train_row, dist))
         distances.sort(key=lambda tup: tup[1])
         neighbors = list()
@@ -35,7 +35,10 @@ class NearestNeighbour:
         return neighbors
 
     def predict_classification(self):
-        neighbors = self._get_neighbors()
-        output_values = [row[-1] for row in neighbors]
-        prediction = max(set(output_values), key=output_values.count)
+        prediction = list()
+        for test_row in self.test:
+            neighbors = self._get_neighbors(test_row)
+            output_values = [row[-1] for row in neighbors]
+            output = max(set(output_values), key=output_values.count)
+            prediction.append(output)
         return prediction
