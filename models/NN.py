@@ -20,8 +20,11 @@ class NearestNeighbour:
 
         return sqrt(distance)
 
-    def _manhattan(self):
-        return None
+    def _manhattan(self,row1,row2):
+        distance = 0.0
+        for i in range(len(row1)-1):
+            distance += abs(row1[i] - row2[i])
+        return distance
 
     def _get_neighbors(self,test_row):
         distances = list()
@@ -40,5 +43,15 @@ class NearestNeighbour:
             neighbors = self._get_neighbors(test_row)
             output_values = [row[-1] for row in neighbors]
             output = max(set(output_values), key=output_values.count)
+            prediction.append(output)
+        return prediction
+
+    def predict_regregision(self):
+        prediction = list()
+        for test_row in self.test:
+            neighbors = self._get_neighbors(test_row)
+            output_values = [row[-1] for row in neighbors]
+            assert self.k == len(output_values), f"Neighbors {len(output_values)} and K {self.k} value are not same"
+            output = sum(output_values) / self.k
             prediction.append(output)
         return prediction
